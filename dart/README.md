@@ -942,6 +942,9 @@ Dart supports two kinds of generator functions:
 ```dart
 import 'dart:io';
 
+//the generator function uses yield to return a value and pause execution. Control is passed back to the caller after each yield, //allowing for the processing of each item one at a time, with the potential to pause between items (as seen with the sleep call).
+ //Implements lazy evaluation. Values are produced and consumed on demand. The remaining values are never computed if the iteration is //stopped early (e.g., using break).
+
 Iterable<int> countStream(int max) sync * {
   for (int i = 0; i < max; ++i) {
     yield i;
