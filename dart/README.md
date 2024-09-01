@@ -1772,41 +1772,90 @@ void printData(data){
 
 ##### Another Stream Example
 
-In this case, we are using Generator function and `yield` keyword to put the values in the stream
+If we have multiple widgets listening to a single stream we use it like this using asBroadcastStream() but if a single widget then
+in stream:streamController.stream inside streambuilder
 
 ```dart
-import 'dart:io';
+class _MyAppState extends State<MyApp> {
+  StreamController<String> streamController = StreamController<String>();
+  late Stream<String> dataStream;
+  TextEditingController textEditingController = TextEditingController();
 
-Stream<int> countStream(int max) async * {
-  for (int i = 0; i < max; ++i) {
-    yield i;
-    sleep(Duration(seconds: 1));
+  @override
+  void initState() {
+    dataStream = streamController.stream.asBroadcastStream();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              StreamBuilder<String>(
+                  stream: dataStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        snapshot.data ?? 'Null Data',
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      );
+                    } else {
+                      return Text(
+                        'No Data',
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      );
+                    }
+                  }),
+              StreamBuilder<String>(
+                  stream: dataStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        snapshot.data ?? 'Null Data',
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      );
+                    } else {
+                      return Text(
+                        'No Data',
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      );
+                    }
+                  }),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                  width: 200,
+                  child: TextField(
+                    controller: textEditingController,
+                  )),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    streamController.add(textEditingController.text);
+                  },
+                  child: Text('Done'))
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
+```
 
-void main() {
-  print('start');
-  countStream(5).listen((data){
-    print(data);
-  },
-  onDone: (){
-    print("Done");
-  });
-  print('end');
-}
-```
-Output:
-
-```
-start
-end
-0
-1
-2
-3
-4
-Done
-```
 
 ### Regular Expression
 
