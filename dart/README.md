@@ -525,6 +525,14 @@ querySelector('#confirm') // Get an object.
   ..text = 'Confirm' // Use its members.
   ..classes.add('important')
   ..onClick.listen((e) => window.alert('Confirmed!'));
+//if there are multiple class instead of a single id with that name then 
+querySelectorAll('.confirm').forEach((element) {
+  element
+    ..text = 'Confirm'
+    ..classes.add('important')
+    ..onClick.listen((e) => window.alert('Confirmed!'));
+});
+
 ```
 
 The first method call, `querySelector()`, returns a `selector` object. The code that follows the cascade notation operates on this selector object, ignoring any subsequent values that might be returned.
